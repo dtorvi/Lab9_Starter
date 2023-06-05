@@ -2,11 +2,25 @@
 <html lang="en">
 
 <head>
+ 
+    
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 9</title>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "aa0de64de2af4434b0830283e14c47ae"
+    });
+    TrackJS.track('Testing TrackJS!');
+  </script>
+  <script>
+    window.addEventListener('global error', function(){
+          console.log("Global error:")
+        })
+  </script>
+  
   <style>
     button {
       margin: 3px;
@@ -88,6 +102,12 @@
   </main>
 
   <script>
+     class NumeralError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'NumeralError';
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,12 +115,115 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new NumeralError('Invalid input: Both inputs need to be valid numbers');
+        }
+
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        output.innerHTML = '';
+        console.error("Input error");
+      } finally{
+        console.log("done");
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
+    // Console Log
+    errorBtns[0].addEventListener('click', () => {
+      let data = 'Console Log Message: Button Pressed';
+      console.log(data);
+    });
+
+    // Console Error
+    errorBtns[1].addEventListener('click', () => {
+      let errorMessage = 'Console error message';
+      console.error(errorMessage);
+    });
+
+    // Console Count
+    errorBtns[2].addEventListener('click', () => {
+      let count = 0;
+      console.log(`Console message: ${++clickCount} clicks`)
+    });
+
+    // Console Warn
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Warning Message');
+    });
+
+    // Console Assert
+    errorBtns[4].addEventListener('click', () => {
+      let test = false;
+      console.assert(condition, 'Assertion failed: Condition is false.');
+    });
+
+    // Console Clear
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+
+    // Console Dir
+    errorBtns[6].addEventListener('click', () => {
+      let obj = { name: 'Devika', age: 22 };
+      console.dir(obj);
+    });
+
+    // Console Dirxml
+    errorBtns[7].addEventListener('click', () => {
+      let dir = document.head;
+      console.dirxml(dir);
+    });
+
+    // Console Group Start / Console Group End
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Group 1');
+      console.log('Message 1');
+      console.log('Message 2');
+      console.groupEnd();
+    });
+
+    // Console Table
+    errorBtns[9].addEventListener('click', () => {
+      let data = [
+        { name: 'Devika', age: 22 },
+        { name: 'Neha', age: 21 },
+        { name: 'Anika', age: 45 }
+      ];
+      console.table(data);
+    });
+
+    // Console Timer Start / Console Timer End
+    let timerStarted = false;
+    errorBtns[10].addEventListener('click', () => {
+      console.time()
+    });
+
+    errorBtns[11].addEventListener('click', () => {
+      console.timeEnd();
+    });
+
+    // Console Trace
+    errorBtns[12].addEventListener('click', () => {
+      function func1() {
+        console.trace();
+      }
+      function func2() {
+        func1();
+      }
+      func2();
+    });
+
+    // Trigger a Global Error
+    errorBtns[13].addEventListener('click', () => {
+      console.log("global error");
+    });
+
+
     // You may move this JS to another file if you wish
   </script>
 </body>
